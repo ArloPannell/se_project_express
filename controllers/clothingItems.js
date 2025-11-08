@@ -11,9 +11,10 @@ const getItems = (req, res) => {
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   Item.create({ name, weather, imageUrl, owner: req.user._id })
-    .then(() => {
-      return res.status(200).send({ message: "Clothing Item Added" });
-    })
+    .then((item) =>
+      res.status(200).send({ message: `${item.name}: Clothing Item Added` })
+    )
+
     .catch((err) => errorHandler(err, res));
 };
 
@@ -21,11 +22,9 @@ const deleteItem = (req, res) => {
   const { itemID } = req.params;
   Item.findByIdAndDelete(itemID)
     .orFail()
-    .then((item) => {
-      return res
-        .status(200)
-        .send({ message: `${item.name}: Clothing Item Deleted` });
-    })
+    .then((item) =>
+      res.status(200).send({ message: `${item.name}: Clothing Item Deleted` })
+    )
     .catch((err) => errorHandler(err, res));
 };
 
@@ -36,9 +35,7 @@ const likeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then(() => {
-      return res.status(200).send({ message: "Like successfully added" });
-    })
+    .then(() => res.status(200).send({ message: "Like successfully added" }))
     .catch((err) => errorHandler(err, res));
 };
 
@@ -49,9 +46,7 @@ const deleteLike = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then(() => {
-      return res.status(200).send({ message: "Removed Like" });
-    })
+    .then(() => res.status(200).send({ message: "Removed Like" }))
     .catch((err) => errorHandler(err, res));
 };
 

@@ -3,7 +3,6 @@ const errorHandler = require("../utils/errors");
 
 const getItems = (req, res) => {
   Item.find({})
-    .orFail()
     .then((items) => res.send(items))
     .catch((err) => errorHandler(err, res));
 };

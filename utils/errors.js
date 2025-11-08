@@ -4,9 +4,13 @@ const errorHandler = (err, res) => {
     return res
       .status(400)
       .send({ message: `Validation Error: ${err.message}` });
-  } else if (err.name === "DocumentNotFoundError") {
+  }
+
+  if (err.name === "DocumentNotFoundError") {
     return res.status(404).send({ message: "Requested resource not found" });
-  } else if (err.name === "CastError") {
+  }
+
+  if (err.name === "CastError") {
     return res.status(400).send({ message: `Cast Error: ${err.message}` });
   }
   return res

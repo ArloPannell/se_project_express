@@ -11,7 +11,7 @@ const createUser = (req, res) => {
   const { name, avatar } = req.body;
   User.create({ name, avatar })
     .then((user) =>
-      res.status(201).send({ message: `User ${name} successfully added` })
+      res.status(201).send({ message: `User ${user.name} successfully added` })
     )
     .catch((err) => errorHandler(err, res));
 };

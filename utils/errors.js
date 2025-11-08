@@ -1,8 +1,8 @@
-const { contains } = require("validator");
-
 const errorHandler = (err, res) => {
   if (err.message.includes("validation")) {
-    return res.status(400).send({ message: err.message });
+    return res
+      .status(400)
+      .send({ message: `Validation Error: ${err.message}` });
   }
   if (err.name === "DocumentNotFoundError") {
     return res.status(404).send({ message: "Requested resource not found" });

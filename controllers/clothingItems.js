@@ -11,9 +11,7 @@ const getItems = (req, res) => {
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   Item.create({ name, weather, imageUrl, owner: req.user._id })
-    .then((item) =>
-      res.status(200).send({ message: `${item.name}: Clothing Item Added` })
-    )
+    .then((item) => res.status(200).send(item))
 
     .catch((err) => errorHandler(err, res));
 };
@@ -22,9 +20,7 @@ const deleteItem = (req, res) => {
   const { itemID } = req.params;
   Item.findByIdAndDelete(itemID)
     .orFail()
-    .then((item) =>
-      res.status(200).send({ message: `${item.name}: Clothing Item Deleted` })
-    )
+    .then((item) => res.status(200).send(item))
     .catch((err) => errorHandler(err, res));
 };
 

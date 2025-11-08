@@ -10,14 +10,7 @@ const getUsers = (req, res) => {
 const createUser = (req, res) => {
   const { name, avatar } = req.body;
   User.create({ name, avatar })
-    .then((user) =>
-      res
-        .status(201)
-        .send(
-          { message: `User ${user.name} - ${user._id} successfully added` },
-          user
-        )
-    )
+    .then((user) => res.status(201).send(user))
     .catch((err) => errorHandler(err, res));
 };
 

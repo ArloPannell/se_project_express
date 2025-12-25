@@ -3,6 +3,8 @@ const router = require("express").Router();
 const userRouter = require("./users");
 const itemRouter = require("./clothingItems");
 
+const auth = require("../middlewares/auth");
+
 const { createUser, login } = require("../controllers/users");
 
 router.use("/users", userRouter);

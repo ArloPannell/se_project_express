@@ -1,5 +1,4 @@
 const Item = require("../models/clothingItem");
-// const { findById } = require("../models/user");
 const errorHandler = require("../utils/errors");
 
 const getItems = (req, res) => {
@@ -18,12 +17,6 @@ const createItem = (req, res) => {
 const deleteItem = (req, res) => {
   const { itemID } = req.params;
   const { _id: reqOwner } = req.user;
-
-  if (!reqOwner) {
-    const err = new Error("Authorization required");
-    err.statusCode = 401;
-    return errorHandler(err, res);
-  }
 
   Item.findById(itemID)
     .orFail()
@@ -47,7 +40,7 @@ const likeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then(() => res.status(200).send({ message: "Like successfully added" }))
+    .then((item) => res.status(200).send(item))
     .catch((err) => errorHandler(err, res));
 };
 
@@ -58,7 +51,7 @@ const deleteLike = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then(() => res.status(200).send({ message: "Removed Like" }))
+    .then((item) => res.status(200).send(item))
     .catch((err) => errorHandler(err, res));
 };
 

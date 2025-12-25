@@ -19,6 +19,12 @@ const errorHandler = (err, res) => {
   if (err.code === 401) {
     return res.status(401).send({ message: err.message });
   }
+  if (err.statusCode === 403) {
+    return res.status(403).send({ message: err.message });
+  }
+  if (err.statusCode === 400) {
+    return res.status(400).send({ message: err.message });
+  }
   return res.status(500).send({
     message: `General: An error has occurred on the server - ${err.name}`,
   });

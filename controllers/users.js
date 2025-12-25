@@ -29,6 +29,16 @@ const getCurrentUser = (req, res) => {
 
 const login = (req, res) => {
   const { email, password } = req.body;
+
+  if (
+    email === undefined ||
+    email === null ||
+    password === undefined ||
+    password === null
+  ) {
+    return res.status(400).send({ message: "Missing Email or Password" });
+  }
+
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {

@@ -18,7 +18,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    return res.status(401).send({ message: "Error Token" });
+    return res.status(403).send({ message: "Incorrect Token" });
   }
   req.user = payload;
   next();

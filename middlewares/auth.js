@@ -3,7 +3,6 @@ const { JWT_SECRET } = require("../utils/config");
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
-  const authError = "Authorization Required";
 
   if (
     !authorization ||
@@ -21,5 +20,6 @@ module.exports = (req, res, next) => {
     return res.status(403).send({ message: "Incorrect Token" });
   }
   req.user = payload;
+
   next();
 };

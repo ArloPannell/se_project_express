@@ -1,5 +1,3 @@
-const { contains } = require("validator");
-
 const errorHandler = (err, res) => {
   if (err.message.includes("validation")) {
     return res

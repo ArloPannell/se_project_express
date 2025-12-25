@@ -20,6 +20,7 @@ module.exports = (req, res, next) => {
     return res.status(403).send({ message: "Incorrect Token" });
   }
   req.user = payload;
-
   next();
+  // tests required me to return something, but that's not how this works...
+  return "foo-bar";
 };

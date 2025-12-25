@@ -1,4 +1,5 @@
 const Item = require("../models/clothingItem");
+// const { findById } = require("../models/user");
 const errorHandler = require("../utils/errors");
 
 const getItems = (req, res) => {
@@ -16,9 +17,26 @@ const createItem = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemID } = req.params;
-  Item.findByIdAndDelete(itemID)
+  const { _id: reqOwner } = req.user;
+
+  if (!reqOwner) {
+    const err = new Error("Authorization required");
+    err.statusCode = 401;
+    return errorHandler(err, res);
+  }
+
+  Item.findById(itemID)
     .orFail()
-    .then((item) => res.status(200).send(item))
+    .then((item) => {
+      const ownerId = item.owner && item.owner.toString();
+      if (ownerId !== reqOwner) {
+        const err = new Error("Not authorized to delete this item");
+        err.statusCode = 403;
+        throw err;
+      }
+      return Item.findByIdAndDelete(itemID).orFail();
+    })
+    .then((deleted) => res.status(200).send(deleted))
     .catch((err) => errorHandler(err, res));
 };
 

@@ -120,9 +120,7 @@ const updateUser = (req, res) => {
     runValidators: true,
   })
     .orFail()
-    .then((user) => {
-      return res.status(OK).send(user);
-    })
+    .then((user) => res.status(OK).send(user))
     .catch((err) => errorHandler(err, res));
   return "RETURN required by Github workflow, don't know why";
 };

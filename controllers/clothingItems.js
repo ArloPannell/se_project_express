@@ -6,9 +6,7 @@ const { OK, FORBIDDEN, BADREQUEST, SERVERERROR } = require("../utils/config");
 
 const getItems = (req, res) => {
   Item.find({})
-    .then((items) => {
-      return res.send(items);
-    })
+    .then((items) => res.send(items))
     .catch((err) => errorHandler(err, res));
 };
 
@@ -44,6 +42,7 @@ const createItem = (req, res) => {
       return res.status(OK).send(item);
     })
     .catch((err) => errorHandler(err, res));
+  return "RETURN required by Github workflow, don't know why";
 };
 
 const deleteItem = (req, res) => {
@@ -72,9 +71,7 @@ const likeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => {
-      return res.status(OK).send(item);
-    })
+    .then((item) => res.status(OK).send(item))
     .catch((err) => errorHandler(err, res));
 };
 
@@ -85,9 +82,7 @@ const deleteLike = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => {
-      return res.status(OK).send(item);
-    })
+    .then((item) => res.status(OK).send(item))
     .catch((err) => errorHandler(err, res));
 };
 

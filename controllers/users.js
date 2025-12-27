@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const errorHandler = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
-const { OK, CREATED, BADREQUEST, SERVERERROR } = require("../utils/config");
+const { OK, CREATED, BADREQUEST } = require("../utils/config");
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
@@ -58,9 +58,7 @@ const getCurrentUser = (req, res) => {
   const { _id } = req.user;
   User.findById(_id)
     .orFail()
-    .then((user) => {
-      return res.status(OK).send(user);
-    })
+    .then((user) => res.status(OK).send(user))
     .catch((err) => errorHandler(err, res));
 };
 
@@ -81,6 +79,8 @@ const login = (req, res) => {
       return res.status(OK).send({ token });
     })
     .catch((err) => errorHandler(err, res));
+
+  return "RETURN required by Github workflow, don't know why";
 };
 
 const updateUser = (req, res) => {

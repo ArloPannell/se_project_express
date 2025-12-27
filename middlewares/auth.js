@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET, UNAUTHORIZED } = require("../utils/config");
+const { JWT_SECRET, UNAUTHORIZED, SERVERERROR } = require("../utils/config");
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
@@ -21,6 +21,6 @@ module.exports = (req, res, next) => {
   }
   req.user = payload;
   next();
-  // tests required me to return something, but that's not how this works, so sending something to pass test...
-  return "foo-bar";
+
+  return "Github Actions requires a return at the end of this function, but it's not needed";
 };

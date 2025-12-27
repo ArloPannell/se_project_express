@@ -6,7 +6,7 @@ const {
   CONFLICT,
   SERVERERROR,
   DBCONFLICT,
-} = require("../utils/config");
+} = require("./config");
 
 const errorHandler = (err, res) => {
   if (err.message === "ValidationError") {

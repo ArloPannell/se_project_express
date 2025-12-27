@@ -1,10 +1,10 @@
+const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const errorHandler = require("../utils/errors");
-const validator = require("validator");
 const { JWT_SECRET } = require("../utils/config");
-const { OK, CREATED, BADREQUEST } = require("../utils/config");
+const { OK, CREATED, BADREQUEST, SERVERERROR } = require("../utils/config");
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
@@ -59,7 +59,7 @@ const getCurrentUser = (req, res) => {
   User.findById(_id)
     .orFail()
     .then((user) => {
-      res.status(OK).send(user);
+      return res.status(OK).send(user);
     })
     .catch((err) => errorHandler(err, res));
 };
@@ -73,18 +73,18 @@ const login = (req, res) => {
       .send({ message: "Missing Email or Password" });
   }
 
-  return User.findUserByCredentials(email, password)
+  User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      res.status(OK).send({ token });
+      return res.status(OK).send({ token });
     })
     .catch((err) => errorHandler(err, res));
 };
 
 const updateUser = (req, res) => {
-  let { name, avatar } = req.body;
+  const { name, avatar } = req.body;
   const { _id } = req.user;
 
   const updates = {};
@@ -114,10 +114,13 @@ const updateUser = (req, res) => {
     updates.avatar = avatar;
   }
 
-  User.findByIdAndUpdate(_id, updates, { new: true, runValidators: true })
+  User.findByIdAndUpdate(_id, updates, {
+    new: true,
+    runValidators: true,
+  })
     .orFail()
     .then((user) => {
-      res.status(OK).send(user);
+      return res.status(OK).send(user);
     })
     .catch((err) => errorHandler(err, res));
 };

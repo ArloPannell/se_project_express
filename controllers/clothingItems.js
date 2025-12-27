@@ -2,11 +2,13 @@ const validator = require("validator");
 const Item = require("../models/clothingItem");
 const errorHandler = require("../utils/errors");
 
-const { OK, FORBIDDEN, BADREQUEST } = require("../utils/config");
+const { OK, FORBIDDEN, BADREQUEST, SERVERERROR } = require("../utils/config");
 
 const getItems = (req, res) => {
   Item.find({})
-    .then((items) => res.send(items))
+    .then((items) => {
+      return res.send(items);
+    })
     .catch((err) => errorHandler(err, res));
 };
 
@@ -32,8 +34,15 @@ const createItem = (req, res) => {
   if (!validator.isURL(imageUrl)) {
     return res.status(BADREQUEST).send({ message: "URL not valid" });
   }
-  Item.create({ name: trimmedName, weather, imageUrl, owner: req.user._id })
-    .then((item) => res.status(OK).send(item))
+  Item.create({
+    name: trimmedName,
+    weather,
+    imageUrl,
+    owner: req.user._id,
+  })
+    .then((item) => {
+      return res.status(OK).send(item);
+    })
     .catch((err) => errorHandler(err, res));
 };
 
@@ -63,7 +72,9 @@ const likeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.status(OK).send(item))
+    .then((item) => {
+      return res.status(OK).send(item);
+    })
     .catch((err) => errorHandler(err, res));
 };
 
@@ -74,7 +85,9 @@ const deleteLike = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.status(OK).send(item))
+    .then((item) => {
+      return res.status(OK).send(item);
+    })
     .catch((err) => errorHandler(err, res));
 };
 

@@ -1,3 +1,24 @@
 const JWT_SECRET = "FooBar<>BarFoo!!";
 
-module.exports = { JWT_SECRET };
+const OK = 200;
+const CREATED = 201;
+const BADREQUEST = 400;
+const UNAUTHORIZED = 401;
+const FORBIDDEN = 403;
+const NOTFOUND = 404;
+const CONFLICT = 409;
+const SERVERERROR = 500;
+const DBCONFLICT = 11000;
+
+module.exports = {
+  JWT_SECRET,
+  OK,
+  CREATED,
+  BADREQUEST,
+  UNAUTHORIZED,
+  FORBIDDEN,
+  NOTFOUND,
+  CONFLICT,
+  SERVERERROR,
+  DBCONFLICT,
+};

@@ -1,5 +1,8 @@
+const validator = require("validator");
 const Item = require("../models/clothingItem");
 const errorHandler = require("../utils/errors");
+
+const { OK, FORBIDDEN, BADREQUEST } = require("../utils/config");
 
 const getItems = (req, res) => {
   Item.find({})
@@ -9,8 +12,28 @@ const getItems = (req, res) => {
 
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
-  Item.create({ name, weather, imageUrl, owner: req.user._id })
-    .then((item) => res.status(200).send(item))
+  if (!name || !weather || !imageUrl) {
+    return res.status(BADREQUEST).send({ message: "Missing Item Information" });
+  }
+
+  if (typeof name !== "string") {
+    return res.status(BADREQUEST).send({ message: "Name must be a string" });
+  }
+  const trimmedName = name.trim();
+  const nameOptions = Item.schema.path("name").options;
+  const min = nameOptions.minlength || 0;
+  const max = nameOptions.maxlength || Infinity;
+  if (trimmedName.length < min || trimmedName.length > max) {
+    return res
+      .status(BADREQUEST)
+      .send({ message: `Name must be between ${min} and ${max} characters` });
+  }
+
+  if (!validator.isURL(imageUrl)) {
+    return res.status(BADREQUEST).send({ message: "URL not valid" });
+  }
+  Item.create({ name: trimmedName, weather, imageUrl, owner: req.user._id })
+    .then((item) => res.status(OK).send(item))
     .catch((err) => errorHandler(err, res));
 };
 
@@ -24,12 +47,12 @@ const deleteItem = (req, res) => {
       const ownerId = item.owner && item.owner.toString();
       if (ownerId !== reqOwner) {
         const err = new Error("Not authorized to delete this item");
-        err.statusCode = 403;
+        err.statusCode = FORBIDDEN;
         throw err;
       }
       return Item.findByIdAndDelete(itemID).orFail();
     })
-    .then((deleted) => res.status(200).send(deleted))
+    .then((deleted) => res.status(OK).send(deleted))
     .catch((err) => errorHandler(err, res));
 };
 
@@ -40,7 +63,7 @@ const likeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.status(200).send(item))
+    .then((item) => res.status(OK).send(item))
     .catch((err) => errorHandler(err, res));
 };
 
@@ -51,7 +74,7 @@ const deleteLike = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.status(200).send(item))
+    .then((item) => res.status(OK).send(item))
     .catch((err) => errorHandler(err, res));
 };
 
